@@ -19,11 +19,19 @@ export default function CharacterCard({ character }: { character: Character }) {
       <label htmlFor="character-name" className="form-label">
         Name
       </label>
-      <input id="character-name" className="form-control"></input>
+      <input
+        id="character-name"
+        className="form-control"
+        placeholder="Deberia aparecer el nombre actual"
+      ></input>
       <label htmlFor="character-name" className="form-label">
         Species
       </label>
-      <input id="character-name" className="form-control"></input>
+      <input
+        id="character-name"
+        className="form-control"
+        placeholder="Deberia aparecer la especie actual"
+      ></input>
     </div>
   );
 
@@ -82,9 +90,11 @@ export default function CharacterCard({ character }: { character: Character }) {
       {isEditing ? characterEditingMainData : characterMainData}
       <ul className="list-group list-group-flush">
         <li className="list-group-item">
-          <span>
-            <b>{location.name}:</b> {location.type}
-          </span>
+          {location.name && (
+            <span>
+              <b>{location.name}:</b> {location.type}
+            </span>
+          )}
           <span></span>
         </li>
         {isEditing ? saveAndCanelButtons : updateAndDeleteButtons}
