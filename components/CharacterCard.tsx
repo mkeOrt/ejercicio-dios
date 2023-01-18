@@ -2,7 +2,26 @@ import * as React from 'react';
 import { useFetchLocation } from '../hooks/location';
 import { Character } from '../models/character.model';
 
-export default function CharacterCard({ character }: { character: Character }) {
+export default function CharacterCard({
+  character,
+  onChangeCharacterAttribute,
+  onDeleteCharacter,
+}: {
+  character: Character;
+  onChangeCharacterAttribute: (id: number, localCharacter: {}) => void;
+  onDeleteCharacter: (character: {}) => void;
+}) {
+  const [localCharacter, setLocalCharacter] = React.useState({
+    name: character.name,
+    species: character.species,
+    id: character.id,
+  });
+
+  const saveLocalCharacter = () => {
+    setIsEditing(false);
+    onChangeCharacterAttribute(character.id, localCharacter);
+  };
+
   const [isEditing, setIsEditing] = React.useState(false);
 
   const { location } = useFetchLocation(character?.locationUrl);
@@ -23,14 +42,24 @@ export default function CharacterCard({ character }: { character: Character }) {
         id="character-name"
         className="form-control"
         placeholder="Deberia aparecer el nombre actual"
+        value={localCharacter.name}
+        onChange={(e) =>
+          setLocalCharacter((prev) => ({ ...prev, name: e.target.value }))
+        }
+        onKeyDown={(e) => e.key === 'Enter' && saveLocalCharacter()}
       ></input>
       <label htmlFor="character-name" className="form-label">
         Species
       </label>
       <input
-        id="character-name"
+        id="character-species"
         className="form-control"
         placeholder="Deberia aparecer la especie actual"
+        value={localCharacter.species}
+        onChange={(e) =>
+          setLocalCharacter((prev) => ({ ...prev, species: e.target.value }))
+        }
+        onKeyDown={(e) => e.key === 'Enter' && saveLocalCharacter()}
       ></input>
     </div>
   );
@@ -50,7 +79,17 @@ export default function CharacterCard({ character }: { character: Character }) {
         </div>
         <div className="col-md-6">
           <div className="d-grid gap-2">
-            <button className="btn btn-danger">Eliminar</button>
+            <button
+              className="btn btn-danger"
+              type="button"
+              data-bs-toggle="modal"
+              data-bs-target="#staticBackdrop"
+              onClick={() => {
+                onDeleteCharacter(localCharacter);
+              }}
+            >
+              Delete
+            </button>
           </div>
         </div>
       </div>
@@ -64,7 +103,14 @@ export default function CharacterCard({ character }: { character: Character }) {
           <div className="d-grid gap-2">
             <button
               className="btn btn-danger"
-              onClick={() => setIsEditing(false)}
+              onClick={() => {
+                setIsEditing(false);
+                setLocalCharacter({
+                  name: character.name,
+                  species: character.species,
+                  id: character.id,
+                });
+              }}
             >
               Cancel
             </button>
@@ -72,13 +118,18 @@ export default function CharacterCard({ character }: { character: Character }) {
         </div>
         <div className="col-md-6">
           <div className="d-grid gap-2">
-            <button className="btn btn-success">Save</button>
+            <button
+              onClick={() => saveLocalCharacter()}
+              className="btn btn-success"
+            >
+              Save
+            </button>
           </div>
         </div>
       </div>
     </li>
   );
-
+  //onDeleteCharacter(character.id)
   return (
     <div className="card border-0 shadow-lg h-100">
       <img
