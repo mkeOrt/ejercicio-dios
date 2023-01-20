@@ -35,44 +35,43 @@ export default function CharacterCard({
 		</div>
 	);
 
-	const handleSubmit = () => saveLocalCharacter();
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		saveLocalCharacter();
+	};
 
 	const characterEditingMainData = (
 		<div className="card-body">
-			<form onSubmit={handleSubmit}>
-				<label htmlFor="character-name" className="form-label">
-					Name
-				</label>
-				<input
-					id="character-name"
-					className="form-control"
-					placeholder="Deberia aparecer el nombre actual"
-					value={localCharacter.name}
-					onChange={(e) =>
-						setLocalCharacter((prev) => ({
-							...prev,
-							name: e.target.value,
-						}))
-					}
-					onKeyDown={(e) => e.key === 'Enter' && saveLocalCharacter()}
-				></input>
-				<label htmlFor="character-name" className="form-label">
-					Species
-				</label>
-				<input
-					id="character-species"
-					className="form-control"
-					placeholder="Deberia aparecer la especie actual"
-					value={localCharacter.species}
-					onChange={(e) =>
-						setLocalCharacter((prev) => ({
-							...prev,
-							species: e.target.value,
-						}))
-					}
-					onKeyDown={(e) => e.key === 'Enter' && saveLocalCharacter()}
-				></input>
-			</form>
+			<label htmlFor="character-name" className="form-label">
+				Name
+			</label>
+			<input
+				id="character-name"
+				className="form-control"
+				placeholder="Deberia aparecer el nombre actual"
+				value={localCharacter.name}
+				onChange={(e) =>
+					setLocalCharacter((prev) => ({
+						...prev,
+						name: e.target.value,
+					}))
+				}
+			></input>
+			<label htmlFor="character-name" className="form-label">
+				Species
+			</label>
+			<input
+				id="character-species"
+				className="form-control"
+				placeholder="Deberia aparecer la especie actual"
+				value={localCharacter.species}
+				onChange={(e) =>
+					setLocalCharacter((prev) => ({
+						...prev,
+						species: e.target.value,
+					}))
+				}
+			></input>
 		</div>
 	);
 
@@ -82,6 +81,7 @@ export default function CharacterCard({
 				<div className="col-md-6">
 					<div className="d-grid gap-2">
 						<button
+							type="button"
 							className="btn btn-success"
 							onClick={() => setIsEditing(true)}
 						>
@@ -107,13 +107,13 @@ export default function CharacterCard({
 			</div>
 		</li>
 	);
-
-	const saveAndCanelButtons = (
+	const saveAndCancelButtons = (
 		<li className="list-group-item">
 			<div className="row">
 				<div className="col-md-6">
 					<div className="d-grid gap-2">
 						<button
+							type="button"
 							className="btn btn-danger"
 							onClick={() => {
 								setIsEditing(false);
@@ -131,7 +131,7 @@ export default function CharacterCard({
 				<div className="col-md-6">
 					<div className="d-grid gap-2">
 						<button
-							onClick={() => saveLocalCharacter()}
+							type="submit"
 							className="btn btn-success"
 						>
 							Save
@@ -141,28 +141,28 @@ export default function CharacterCard({
 			</div>
 		</li>
 	);
-	//onDeleteCharacter(character.id)
 	return (
 		<div className="card border-0 shadow-lg h-100">
-			<img
-				className="card-img-top"
-				src={character.image}
-				alt="character image"
-			/>
+			<form onSubmit={handleSubmit}>
+				<img
+					className="card-img-top"
+					src={character.image}
+					alt="character image"
+				/>
 
-			{isEditing ? characterEditingMainData : characterMainData}
-			<ul className="list-group list-group-flush">
-				<li className="list-group-item">
-					{location.name && (
-						<span>
-							<b>{location.name}:</b> {location.type}
-						</span>
-					)}
-					<span></span>
-				</li>
-				{isEditing ? saveAndCanelButtons : updateAndDeleteButtons}
-			</ul>
+				{isEditing ? characterEditingMainData : characterMainData}
+				<ul className="list-group list-group-flush">
+					<li className="list-group-item">
+						{location.name && (
+							<span>
+								<b>{location.name}:</b> {location.type}
+							</span>
+						)}
+						<span></span>
+					</li>
+					{isEditing ? saveAndCancelButtons : updateAndDeleteButtons}
+				</ul>
+			</form>
 		</div>
 	);
 }
-
